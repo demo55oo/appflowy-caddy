@@ -154,6 +154,7 @@
 				versions ipv4 ipv6
 			}
 			header_up Host {http.request.host}
+			header_down +*
 		}
 	}
 
