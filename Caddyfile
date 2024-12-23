@@ -38,6 +38,15 @@
 	}
 }
 
+(cors_headers) {
+	header {
+		Access-Control-Allow-Origin "{$ENV_AF_CLOUD_DOMAIN}, {$ENV_AF_WEB_DOMAIN}"
+		Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+		Access-Control-Allow-Headers *
+		Access-Control-Max-Age "3600"
+	}
+}
+
 :80, :443 {
 	import cors {$ENV_AF_CLOUD_DOMAIN}
 	import cors {$ENV_AF_WEB_DOMAIN}
@@ -54,6 +63,7 @@
 	}
 
 	handle /api/import/* {
+		import cors_headers
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_APPFLOWY_CLOUD}
@@ -84,8 +94,7 @@
 
 	# WebSocket
 	handle /ws/* {
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
+		import cors_headers
 
 		reverse_proxy {
 			dynamic a {
@@ -102,8 +111,7 @@
 	}
 
 	handle /api/chat/* {
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
+		import cors_headers
 
 		reverse_proxy {
 			dynamic a {
@@ -121,8 +129,7 @@
 	}
 
 	handle /api/* {
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
+		import cors_headers
 
 		# proxy all requests for /api/* to the backend, configure this variable in the service settings
 		reverse_proxy {
@@ -183,8 +190,7 @@
 
 	# App Flowy AI
 	handle /ai/* {
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
+		import cors_headers
 
 		reverse_proxy {
 			dynamic a {
@@ -203,8 +209,7 @@
 
 	# Admin Frontend
 	handle {
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
+		import cors_headers
 
 		reverse_proxy {
 			dynamic a {
