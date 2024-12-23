@@ -70,9 +70,6 @@
 				header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
 			}
 
-			buffer_requests off
-			buffer_responses off
-
 			# configure load balancing settings
 			import lb_settings
 			# configure passive health checks
