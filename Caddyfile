@@ -66,10 +66,6 @@
 			header_up X-Forwarded-For {http.forward_for}
 			header_up X-Forwarded-Proto {http.request.scheme}
 
-			@cors_origin {
-				header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
-			}
-
 			# configure load balancing settings
 			import lb_settings
 			# configure passive health checks
