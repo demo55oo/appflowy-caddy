@@ -213,20 +213,9 @@
 	# }
 
 	# Web App Hosted on railway
-	handle /assets/* {
-		reverse_proxy {$ENV_FRONTEND}:{$ENV_FRONTEND_PORT}
-	}
-
-	handle /* {
+	handle {
 		reverse_proxy {
 			to {$ENV_FRONTEND}:{$ENV_FRONTEND_PORT}
-			header_up Host {host}
-			header_up X-Real-IP {remote.host}
-			header_up X-Forwarded-For {http.forward_for}
-			header_up X-Forwarded-Proto {scheme}
-			lb_policy first
-			health_timeout 5s
 		}
-		try_files {path} /index.html
 	}
 }
