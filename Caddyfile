@@ -214,16 +214,11 @@
 
 	# Web App Hosted on Vercel
 	handle / {
-		reverse_proxy {
-			dynamic a {
-				name {$ENV_FRONTEND}
-				port {$ENV_FRONTEND_PORT}
-				refresh 1s
-				dial_timeout 30s
-				versions ipv4 ipv6
-			}
-			header_up X-Scheme {scheme}
+		reverse_proxy ${ENV_FRONTEND}:${ENV_FRONTEND_PORT} {
 			header_up Host {host}
+			header_up X-Real-IP {remote.host}
+			header_up X-Forwarded-For {http.forward_for}
+			header_up X-Forwarded-Proto {scheme}
 		}
 	}
 }
