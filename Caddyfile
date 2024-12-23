@@ -26,28 +26,42 @@
 	unhealthy_request_count 200
 }
 
+# (cors) {
+# 	@cors_preflight method OPTIONS
+
+# 	header {
+# 		Access-Control-Allow-Origin "{header.origin}"
+# 		Vary Origin
+# 		Access-Control-Expose-Headers "Authorization"
+# 		Access-Control-Allow-Credentials "true"
+# 	}
+
+# 	handle @cors_preflight {
+# 		header {
+# 			Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE"
+# 			Access-Control-Max-Age "3600"
+# 		}
+# 		respond "" 204
+# 	}
+# }
+
 (cors) {
-	@cors_preflight method OPTIONS
-
-	header {
-		Access-Control-Allow-Origin "{header.origin}"
-		Vary Origin
-		Access-Control-Expose-Headers "Authorization"
-		Access-Control-Allow-Credentials "true"
-	}
-
-	handle @cors_preflight {
-		header {
-			Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE"
-			Access-Control-Max-Age "3600"
-		}
-		respond "" 204
+	@origin header Origin {args.0}
+	header @origin {
+		Access-Control-Allow-Origin "{args.0}"
+		Access-Control-Request-Method GET
 	}
 }
 
-:80, :443 {
-	import cors {header.origin}
+{$ENV_AF_CLOUD_DOMAIN} {
+	import cors {$ENV_AF_CLOUD_DOMAIN}
+}
 
+{$ENV_AF_WEB_DOMAIN} {
+	import cors {$ENV_AF_WEB_DOMAIN}
+}
+
+:80, :443 {
 	# Enable logging
 	log {
 		output file /var/log/caddy/access.log
