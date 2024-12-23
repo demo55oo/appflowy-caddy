@@ -26,31 +26,16 @@
 	unhealthy_request_count 200
 }
 
-(cors) {
-	@cors{args[0]} header Origin {args[0]}
-
-	handle @cors{args[0]} {
-		header {
-			Access-Control-Allow-Origin "{args[0]}"
-			Access-Control-Expose-Headers *
-			defer
-		}
-	}
-}
-
 (cors_headers) {
 	header {
 		Access-Control-Allow-Origin "*"
 		Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-		Access-Control-Allow-Headers *
+		Access-Control-Allow-Headers "*"
 		Access-Control-Max-Age "3600"
 	}
 }
 
 :80, :443 {
-	import cors {$ENV_AF_CLOUD_DOMAIN}
-	import cors {$ENV_AF_WEB_DOMAIN}
-
 	# Enable logging
 	log {
 		output file /var/log/caddy/access.log
