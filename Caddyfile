@@ -220,5 +220,6 @@
 			header_up X-Real-IP {remote.host}
 			header_up X-Forwarded-For {http.forward_for}
 		}
+		try_files {path} /index.html
 	}
 }
