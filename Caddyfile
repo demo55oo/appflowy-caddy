@@ -215,8 +215,8 @@
 	# Web App Hosted on Vercel
 	handle / {
 		reverse_proxy {
-			to {$ENV_AF_WEB_DOMAIN}
-			header_up Host {host}
+			to {$ENV_AF_WEB_DOMAIN}:443
+			header_up Host {$ENV_AF_WEB_DOMAIN}
 			header_up X-Real-IP {remote.host}
 			header_up X-Forwarded-For {http.forward_for}
 		}
