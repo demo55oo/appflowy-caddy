@@ -67,11 +67,9 @@
 			header_up X-Forwarded-Proto {http.request.scheme}
 
 			@cors_origin {
-            	header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
+				header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
 			}
 
-			write_timeout 600s
-			read_timeout 600s
 			buffer_requests off
 			buffer_responses off
 
@@ -89,11 +87,16 @@
 		header Access-Control-Max-Age "3600"
 
 		request_body {
-        	max_size 2GB
-    	}
+			max_size 2GB
+		}
+
+		timeouts {
+			read 600s
+			write 600s
+		}
 	}
 
-    # WebSocket
+	# WebSocket
 	handle /ws/* {
 		reverse_proxy {
 			dynamic a {
@@ -144,7 +147,7 @@
 			header_up X-Forwarded-Proto {http.request.scheme}
 
 			@cors_origin {
-            	header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
+				header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
 			}
 
 			# configure load balancing settings
@@ -208,7 +211,6 @@
 			header_up X-Forwarded-Proto {http.request.scheme}
 		}
 	}
-
 
 	# Admin Frontend
 	handle {
