@@ -27,18 +27,7 @@
 }
 
 (cors) {
-	# @cors_preflight{args[0]} method OPTIONS
 	@cors{args[0]} header Origin {args[0]}
-
-	# handle @cors_preflight{args[0]} {
-	# 	header {
-	# 		Access-Control-Allow-Origin "{args[0]}"
-	# 		Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-	# 		Access-Control-Allow-Headers *
-	# 		Access-Control-Max-Age "3600"
-	# 	}
-	# 	respond "" 204
-	# }
 
 	handle @cors{args[0]} {
 		header {
@@ -95,6 +84,9 @@
 
 	# WebSocket
 	handle /ws/* {
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
+
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_APPFLOWY_CLOUD}
@@ -110,6 +102,9 @@
 	}
 
 	handle /api/chat/* {
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
+
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_APPFLOWY_CLOUD}
@@ -126,6 +121,9 @@
 	}
 
 	handle /api/* {
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
+
 		# proxy all requests for /api/* to the backend, configure this variable in the service settings
 		reverse_proxy {
 			# for private networking replicas are exposed as multiple dns results, use those dns results as the upstreams
@@ -185,6 +183,9 @@
 
 	# App Flowy AI
 	handle /ai/* {
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
+
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_APPFLOWY_AI}
@@ -202,6 +203,9 @@
 
 	# Admin Frontend
 	handle {
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
+
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_ADMIN_FRONTEND}
