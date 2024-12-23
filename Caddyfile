@@ -70,7 +70,8 @@
             	header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
 			}
 
-			timeout 600s
+			write_timeout 600s
+			read_timeout 600s
 			buffer_requests off
 			buffer_responses off
 
