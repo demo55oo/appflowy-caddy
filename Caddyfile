@@ -39,7 +39,7 @@
 	}
 
 	# AppFlowy-Cloud API
-	handle /api/options {
+	handle /api/options/* {
 		@cors_preflight method OPTIONS
 		handle @cors_preflight {
 			header Access-Control-Allow-Origin "http://127.0.0.1:8000"
@@ -48,6 +48,48 @@
 			header Access-Control-Max-Age "3600"
 			respond "" 204
 		}
+	}
+
+	handle /api/import/* {
+		reverse_proxy {
+			dynamic a {
+				name {$ENV_APPFLOWY_CLOUD}
+				port {$ENV_APPFLOWY_CLOUD_PORT}
+				refresh 1s
+				dial_timeout 30s
+				versions ipv4 ipv6
+			}
+
+			header_up X-Request-Id {http.request.id}
+			header_up Host {http.request.host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {http.forward_for}
+			header_up X-Forwarded-Proto {http.request.scheme}
+
+			@cors_origin {
+            	header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
+			}
+
+			header @cors_origin Access-Control-Allow-Origin {http.request.header.Origin}
+			header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+			header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
+			header Access-Control-Max-Age "3600"
+
+			timeout 600s
+			buffer_requests off
+			buffer_responses off
+
+			# configure load balancing settings
+			import lb_settings
+			# configure passive health checks
+			import passive_health_checks
+			# sets the Host header to the header to the dynamic name and port options
+			header_up Host {upstream_hostport}
+		}
+
+		request_body {
+        	max_size 2GB
+    	}
 	}
 
     # WebSocket
@@ -100,6 +142,15 @@
 			header_up X-Forwarded-For {http.forward_for}
 			header_up X-Forwarded-Proto {http.request.scheme}
 
+			@cors_origin {
+            	header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
+			}
+			
+			header @cors_origin Access-Control-Allow-Origin {http.request.header.Origin}
+			header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+			header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
+			header Access-Control-Max-Age "3600"
+
 			# configure load balancing settings
 			import lb_settings
 			# configure passive health checks
@@ -107,11 +158,6 @@
 			# sets the Host header to the header to the dynamic name and port options
 			header_up Host {upstream_hostport}
 		}
-
-		header Access-Control-Allow-Origin "http://127.0.0.1:8000"
-		header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH"
-		header Access-Control-Allow-Headers "Content-Type, Authorization, Accept, Client-Version"
-		header Access-Control-Max-Age "3600"
 	}
 
 	# GoTrue
