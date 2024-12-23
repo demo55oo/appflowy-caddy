@@ -70,11 +70,6 @@
             	header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
 			}
 
-			header @cors_origin Access-Control-Allow-Origin {http.request.header.Origin}
-			header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-			header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
-			header Access-Control-Max-Age "3600"
-
 			timeout 600s
 			buffer_requests off
 			buffer_responses off
@@ -86,6 +81,11 @@
 			# sets the Host header to the header to the dynamic name and port options
 			header_up Host {upstream_hostport}
 		}
+
+		header @cors_origin Access-Control-Allow-Origin {http.request.header.Origin}
+		header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+		header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
+		header Access-Control-Max-Age "3600"
 
 		request_body {
         	max_size 2GB
@@ -145,11 +145,6 @@
 			@cors_origin {
             	header Origin http://127.0.0.1:{$ENV_APPFLOWY_CLOUD_PORT}
 			}
-			
-			header @cors_origin Access-Control-Allow-Origin {http.request.header.Origin}
-			header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-			header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
-			header Access-Control-Max-Age "3600"
 
 			# configure load balancing settings
 			import lb_settings
@@ -158,6 +153,11 @@
 			# sets the Host header to the header to the dynamic name and port options
 			header_up Host {upstream_hostport}
 		}
+
+		header @cors_origin Access-Control-Allow-Origin {http.request.header.Origin}
+		header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+		header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
+		header Access-Control-Max-Age "3600"
 	}
 
 	# GoTrue
