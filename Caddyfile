@@ -26,14 +26,14 @@
 	unhealthy_request_count 200
 }
 
-(cors_headers) {
-	header {
-		Access-Control-Allow-Origin "*"
-		Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-		Access-Control-Allow-Headers "*"
-		Access-Control-Max-Age "3600"
-	}
-}
+# (cors_headers) {
+# 	header {
+# 		Access-Control-Allow-Origin "*"
+# 		Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+# 		Access-Control-Allow-Headers "*"
+# 		Access-Control-Max-Age "3600"
+# 	}
+# }
 
 :80, :443 {
 	# Enable logging
@@ -48,7 +48,7 @@
 	}
 
 	handle /api/import/* {
-		import cors_headers
+		# import cors_headers
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_APPFLOWY_CLOUD}
@@ -79,7 +79,7 @@
 
 	# WebSocket
 	handle /ws/* {
-		import cors_headers
+		# import cors_headers
 
 		reverse_proxy {
 			dynamic a {
@@ -96,7 +96,7 @@
 	}
 
 	handle /api/chat/* {
-		import cors_headers
+		# import cors_headers
 
 		reverse_proxy {
 			dynamic a {
@@ -114,7 +114,7 @@
 	}
 
 	handle /api/* {
-		import cors_headers
+		# import cors_headers
 
 		# proxy all requests for /api/* to the backend, configure this variable in the service settings
 		reverse_proxy {
@@ -144,7 +144,7 @@
 
 	# GoTrue
 	handle_path /gotrue/* {
-		import cors_headers
+		# import cors_headers
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_GOTRUE}
@@ -159,7 +159,7 @@
 
 	# Minio Web UI
 	handle_path /minio {
-		import cors_headers
+		# import cors_headers
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_MINIO}
@@ -177,7 +177,7 @@
 
 	# App Flowy AI
 	handle /ai/* {
-		import cors_headers
+		# import cors_headers
 
 		reverse_proxy {
 			dynamic a {
@@ -196,7 +196,7 @@
 
 	# Admin Frontend
 	handle {
-		import cors_headers
+		# import cors_headers
 
 		reverse_proxy {
 			dynamic a {
