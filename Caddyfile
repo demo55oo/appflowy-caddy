@@ -27,30 +27,26 @@
 }
 
 (cors) {
-	@cors_preflight{args[0]} method OPTIONS
+	@cors_preflight method OPTIONS
 
-	handle @cors_preflight{args[0]} {
-		header {
-			Access-Control-Allow-Origin "{header.origin}"
-			Access-Control-Allow-Headers *
-			Access-Control-Max-Age "3600"
-			defer
-		}
-		respond "" 204
+	header {
+		Access-Control-Allow-Origin "{header.origin}"
+		Vary Origin
+		Access-Control-Expose-Headers "Authorization"
+		Access-Control-Allow-Credentials "true"
 	}
 
-	handle @cors{args[0]} {
+	handle @cors_preflight {
 		header {
-			Access-Control-Allow-Origin "{header.origin}"
-			Access-Control-Expose-Headers *
-			defer
+			Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE"
+			Access-Control-Max-Age "3600"
 		}
+		respond "" 204
 	}
 }
 
 :80, :443 {
-	import cors {$ENV_AF_CLOUD_DOMAIN}
-	import cors {$ENV_AF_WEB_DOMAIN}
+	import cors {header.origin}
 
 	# Enable logging
 	log {
