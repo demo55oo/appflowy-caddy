@@ -26,6 +26,30 @@
 	unhealthy_request_count 200
 }
 
+(cors) {
+	@cors_preflight{args.0} method OPTIONS
+	@cors{args.0} header Origin {args.0}
+
+	handle @cors_preflight{args.0} {
+		header {
+			Access-Control-Allow-Origin "{args.0}"
+			Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+			Access-Control-Allow-Headers *
+			Access-Control-Max-Age "3600"
+			defer #turn on defer on your header directive to make sure the new header values are set after proxying
+		}
+		respond "" 204
+	}
+
+	handle @cors{args.0} {
+		header {
+			Access-Control-Allow-Origin "{args.0}"
+			Access-Control-Expose-Headers *
+			defer
+		}
+	}
+}
+
 :80, :443 {
 	# Enable logging
 	log {
@@ -40,14 +64,8 @@
 
 	# AppFlowy-Cloud API
 	handle /api/options/* {
-		@cors_preflight method OPTIONS
-		handle @cors_preflight {
-			header Access-Control-Allow-Origin "http://127.0.0.1:8000"
-			header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE, PATCH"
-			header Access-Control-Allow-Headers "Content-Type, Authorization, Accept, Client-Version"
-			header Access-Control-Max-Age "3600"
-			respond "" 204
-		}
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	handle /api/import/* {
@@ -74,9 +92,8 @@
 			header_up Host {upstream_hostport}
 		}
 
-		header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-		header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
-		header Access-Control-Max-Age "3600"
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 
 		request_body {
 			max_size 2GB
@@ -97,6 +114,8 @@
 			header_up Upgrade {http.request.header.Upgrade}
 			header_up Connection {http.request.header.Connection}
 		}
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	handle /api/chat/* {
@@ -113,6 +132,8 @@
 				response_header_timeout 600s
 			}
 		}
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	handle /api/* {
@@ -140,10 +161,8 @@
 			# sets the Host header to the header to the dynamic name and port options
 			header_up Host {upstream_hostport}
 		}
-
-		header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-		header Access-Control-Allow-Headers "Content-Type, Authorization, Accept"
-		header Access-Control-Max-Age "3600"
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# GoTrue
@@ -158,6 +177,8 @@
 			}
 			header_up Host {http.request.host}
 		}
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# Minio Web UI
@@ -175,6 +196,8 @@
 			header_up X-Forwarded-For {http.forward_for}
 			header_up X-Forwarded-Proto {http.request.scheme}
 		}
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# App Flowy AI
@@ -192,6 +215,8 @@
 			header_up X-Forwarded-For {http.forward_for}
 			header_up X-Forwarded-Proto {http.request.scheme}
 		}
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# Admin Frontend
@@ -207,5 +232,7 @@
 			header_up X-Scheme {scheme}
 			header_up Host {host}
 		}
+		import cors {$ENV_AF_CLOUD_DOMAIN}
+		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 }
