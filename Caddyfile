@@ -59,12 +59,6 @@
 		respond "OK" 200
 	}
 
-	# AppFlowy-Cloud API
-	handle /api/options/* {
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
-	}
-
 	handle /api/import/* {
 		reverse_proxy {
 			dynamic a {
