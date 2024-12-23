@@ -215,11 +215,15 @@
 	# Web App Hosted on Vercel
 	handle / {
 		reverse_proxy {
-			to {$ENV_AF_WEB_DOMAIN}:443
-			header_up Host {$ENV_AF_WEB_DOMAIN}
-			header_up X-Real-IP {remote.host}
-			header_up X-Forwarded-For {http.forward_for}
+			dynamic a {
+				name {$ENV_FRONTEND}
+				port {$ENV_FRONTEND_PORT}
+				refresh 1s
+				dial_timeout 30s
+				versions ipv4 ipv6
+			}
+			header_up X-Scheme {scheme}
+			header_up Host {host}
 		}
-		try_files {path} /index.html
 	}
 }
