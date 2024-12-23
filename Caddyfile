@@ -214,12 +214,12 @@
 
 	# Web App Hosted on railway
 	handle /assets/* {
-		reverse_proxy ${ENV_FRONTEND}:${ENV_FRONTEND_PORT}
+		reverse_proxy {$ENV_FRONTEND}:{$ENV_FRONTEND_PORT}
 	}
 
 	handle /* {
 		reverse_proxy {
-			to ${ENV_FRONTEND}:${ENV_FRONTEND_PORT}
+			to {$ENV_FRONTEND}:{$ENV_FRONTEND_PORT}
 			header_up Host {host}
 			header_up X-Real-IP {remote.host}
 			header_up X-Forwarded-For {http.forward_for}
