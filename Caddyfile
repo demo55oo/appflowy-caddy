@@ -215,7 +215,13 @@
 	# Web App Hosted on railway
 	handle {
 		reverse_proxy {
-			to {$ENV_FRONTEND}:{$ENV_FRONTEND_PORT}
+			dynamic a {
+				name {$ENV_FRONTEND}
+				port {$ENV_FRONTEND_PORT}
+				refresh 1s
+				dial_timeout 30s
+				versions ipv4 ipv6
+			}
 		}
 	}
 }
