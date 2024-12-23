@@ -51,6 +51,9 @@
 }
 
 :80, :443 {
+	import cors {$ENV_AF_CLOUD_DOMAIN}
+	import cors {$ENV_AF_WEB_DOMAIN}
+
 	# Enable logging
 	log {
 		output file /var/log/caddy/access.log
@@ -92,9 +95,6 @@
 			header_up Host {upstream_hostport}
 		}
 
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
-
 		request_body {
 			max_size 2GB
 		}
@@ -114,8 +114,6 @@
 			header_up Upgrade {http.request.header.Upgrade}
 			header_up Connection {http.request.header.Connection}
 		}
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	handle /api/chat/* {
@@ -132,8 +130,6 @@
 				response_header_timeout 600s
 			}
 		}
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	handle /api/* {
@@ -161,8 +157,6 @@
 			# sets the Host header to the header to the dynamic name and port options
 			header_up Host {upstream_hostport}
 		}
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# GoTrue
@@ -177,8 +171,6 @@
 			}
 			header_up Host {http.request.host}
 		}
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# Minio Web UI
@@ -196,8 +188,6 @@
 			header_up X-Forwarded-For {http.forward_for}
 			header_up X-Forwarded-Proto {http.request.scheme}
 		}
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# App Flowy AI
@@ -215,8 +205,6 @@
 			header_up X-Forwarded-For {http.forward_for}
 			header_up X-Forwarded-Proto {http.request.scheme}
 		}
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 
 	# Admin Frontend
@@ -232,7 +220,5 @@
 			header_up X-Scheme {scheme}
 			header_up Host {host}
 		}
-		import cors {$ENV_AF_CLOUD_DOMAIN}
-		import cors {$ENV_AF_WEB_DOMAIN}
 	}
 }
