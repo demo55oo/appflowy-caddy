@@ -162,7 +162,7 @@
 	}
 
 	# Minio Web UI
-	handle_path /minio/* {
+	handle_path /minio {
 		reverse_proxy {
 			dynamic a {
 				name {$ENV_MINIO}
