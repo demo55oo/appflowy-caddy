@@ -207,8 +207,7 @@
 				dial_timeout 30s
 				versions ipv4 ipv6
 			}
-			header_up X-Scheme {scheme}
-			header_up Host {host}
+			
 		}
 	}
 
